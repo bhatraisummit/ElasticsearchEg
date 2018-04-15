@@ -49,8 +49,8 @@ public class DefaultController {
         client = new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost("localhost", 9200, "http")));
-    } 
-    
+    }
+
     @PostConstruct
     public void createIndex(){
         CreateIndexRequest request = new CreateIndexRequest("book");
@@ -60,7 +60,8 @@ public class DefaultController {
             Logger.getLogger(DefaultController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    // deletes index when undeployed
     @PreDestroy
     public void deleteIndex(){
         DeleteIndexRequest request = new DeleteIndexRequest("book");
@@ -101,7 +102,7 @@ public class DefaultController {
                                                                   "numbers", 10,
                                                                   "grade", "Two"));
         BulkResponse response = client.bulk(request);
-        return response.toString();
+        return response.hasFailures()?"Failure ":"Success";
     }
 
     @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
